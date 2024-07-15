@@ -1,5 +1,5 @@
 // Adapted from code by Simon Sarris: http://stackoverflow.com/a/10450761
-const getMousePosition = function (event, element) {
+export const getMousePos = function (event, element) {
   const stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(element, null).paddingLeft, 10) || 0;
   const stylePaddingTop = parseInt(document.defaultView.getComputedStyle(element, null).paddingTop, 10) || 0;
   const styleBorderLeft = parseInt(document.defaultView.getComputedStyle(element, null).borderLeftWidth, 10) || 0;
