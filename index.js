@@ -14,6 +14,7 @@ export class RenderLoop {
   }
 
   addSprite(sprite) {
+    sprite.setRenderLoop(this);
     this.sprites.push(sprite);
   }
 
