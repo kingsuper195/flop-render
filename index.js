@@ -40,37 +40,46 @@ export class RenderLoop {
     this.renderer.draw();
   }
 
-  updateSkin(sprite) {
-    const WantedSkinType = {
-      bitmap: 'bitmap',
-      vector: 'vector',
-    };
-    const wantedSkin = sprite.currentCostume.type;
+  async updateSkin(sprite) {
+    return new Promise((resolve) => {
 
-    // Bitmap (squirrel)
-    const image = new Image();
-    image.addEventListener('load', () => {
-      const bitmapSkinId = renderer.createBitmapSkin(image);
+      const WantedSkinType = {
+        bitmap: 'bitmap',
+        vector: 'vector',
+      };
+      const wantedSkin = sprite.currentCostume.type;
+
+      // Bitmap (squirrel)
       if (wantedSkin === WantedSkinType.bitmap) {
-        this.renderer.updateDrawableProperties(sprite.render, {
-          skinId: bitmapSkinId
-        });
-      }
-    });
-    image.crossOrigin = 'anonymous';
-    image.src = sprite.currentCostume.data;
+        const image = new Image();
+        image.addEventListener('load', () => {
+          const bitmapSkinId = this.renderer.createBitmapSkin(image);
 
-    // SVG (cat 1-a)
-    const xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', () => {
-      const skinId = renderer.createSVGSkin(xhr.responseText);
-      if (wantedSkin === WantedSkinType.vector) {
-        this.renderer.updateDrawableProperties(sprite.render, {
-          skinId: skinId
+          this.renderer.updateDrawableProperties(sprite.render, {
+            skinId: bitmapSkinId
+          });
+
+          resolve();
         });
+        image.crossOrigin = 'anonymous';
+        image.src = sprite.currentCostume.data;
+      }
+
+      // SVG (cat 1-a)
+      if (wantedSkin === WantedSkinType.vector) {
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', () => {
+          const skinId = this.renderer.createSVGSkin(xhr.responseText);
+
+          this.renderer.updateDrawableProperties(sprite.render, {
+            skinId: skinId
+          });
+
+          resolve();
+        });
+        xhr.open('GET', sprite.currentCostume.data);
+        xhr.send();
       }
     });
-    xhr.open('GET', sprite.currentCostume.data);
-    xhr.send();
   }
 }
