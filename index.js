@@ -19,7 +19,7 @@ export class RenderLoop {
 
   setStage(x, wantedSkin) {
     return new Promise((resolve) => {
-      stage = this.renderer.createDrawable('group');
+      const stage = this.renderer.createDrawable('group');
        this.renderer.updateDrawableProperties(stage, {
         position: [0, 0],
         scale: [100, 100],
