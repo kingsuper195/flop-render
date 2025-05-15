@@ -36,7 +36,7 @@ export class RenderLoop {
         image.addEventListener('load', () => {
           const bitmapSkinId = this.renderer.createBitmapSkin(image);
 
-          this.renderer.updateDrawableProperties(sprite.render, {
+          this.renderer.updateDrawableProperties(stage, {
             skinId: bitmapSkinId
           });
 
@@ -52,7 +52,7 @@ export class RenderLoop {
         xhr.addEventListener('load', () => {
           const skinId = this.renderer.createSVGSkin(xhr.responseText);
 
-          this.renderer.updateDrawableProperties(sprite.render, {
+          this.renderer.updateDrawableProperties(stage, {
             skinId: skinId
           });
 
@@ -92,6 +92,8 @@ export class RenderLoop {
 
   async updateSkin(sprite) {
     return new Promise((resolve) => {
+
+      
 
       const WantedSkinType = {
         bitmap: 'bitmap',
