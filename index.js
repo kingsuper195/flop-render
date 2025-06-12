@@ -69,6 +69,10 @@ export class RenderLoop {
     this.sprites.push(sprite);
   }
 
+  addGlobal(global) {
+    global.setRenderLoop(this);
+  }
+
   addCallback(callback) {
     this.callbacks.push(callback);
   }
