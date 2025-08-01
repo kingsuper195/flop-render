@@ -1,4 +1,3 @@
-
 const FPS = 30;
 const RENDER_STEP_TIME = 1000 / FPS;
 
@@ -15,12 +14,29 @@ export class RenderLoop {
     requestAnimationFrame(this.frame.bind(this));
   }
 
+  async playSound(pan, pitch, volume, soundFile) {
+    const audioContext = new AudioContext();
+    const gainNode = audioContext.createGain();
+    const res = await fetch(soundFile);
+    const soundBuffer = await res.arrayBuffer();
+    const audioContextBuffer = await audioContext.decodeAudioData(soundBuffer);
+    const source = audioContext.createBufferSource();
+    source.buffer = audioContextBuffer;
+    source.playbackRate.value = pitch / 100;
+    const panner = new StereoPannerNode(audioContext, { pan: (pan / 100) });
+    gainNode.gain.value = volume / 100;
 
+    source.connect(gainNode).connect(panner).connect(audioContext.destination);
+    // const panner=audioContext.createPanner();
+
+
+    source.start();
+  }
 
   setStage(x, wantedSkin) {
     return new Promise((resolve) => {
       const stage = this.renderer.createDrawable('group');
-       this.renderer.updateDrawableProperties(stage, {
+      this.renderer.updateDrawableProperties(stage, {
         position: [0, 0],
         scale: [100, 100],
         direction: 90
@@ -97,7 +113,7 @@ export class RenderLoop {
   async updateSkin(sprite) {
     return new Promise((resolve) => {
 
-      
+
 
       const WantedSkinType = {
         bitmap: 'bitmap',
