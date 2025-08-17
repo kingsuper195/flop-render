@@ -1,17 +1,32 @@
+import { getMousePos } from "./getMousePosition.js";
+import "./scratch-render.js";
+
 const FPS = 30;
 const RENDER_STEP_TIME = 1000 / FPS;
 
 
 export class RenderLoop {
   sprites = [];
+  mouse = { x: 0, y: 0, click: false }
   callbacks = [];
   zero = document.timeline.currentTime;
   step = 0;
   fps = FPS;
 
-  constructor(renderer) {
-    this.renderer = renderer;
+  constructor(canvas) {
+    this.renderer = new ScratchRender(canvas);
     requestAnimationFrame(this.frame.bind(this));
+    document.addEventListener("mousemove", (e) => {
+      let mpos = getMousePos(e, canvas);
+      this.mouse.x = mpos.x-240;
+      this.mouse.y = -mpos.y+180;
+    });
+    document.addEventListener("mousedown", (event) => {
+      this.mouse.click = true;
+    });
+    document.addEventListener("mouseup", (event) => {
+      this.mouse.click = false;
+    });
   }
 
   async playSound(pan, pitch, volume, soundFile) {
@@ -123,6 +138,7 @@ export class RenderLoop {
 
   drawStep() {
     this.sprites.forEach((sprite) => {
+      console.log(this.mouse);
       this.renderer.updateDrawableProperties(sprite.sprite.render, sprite.sprite.getRendererProps());
     });
     this.renderer.draw();
