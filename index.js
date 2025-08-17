@@ -80,9 +80,27 @@ export class RenderLoop {
     });
   }
 
-  addSprite(sprite) {
+  _findSprite(name) {
+    return this.sprites.findIndex(e => e.name == name)
+  }
+
+  addSprite(sprite, name) {
     sprite.setRenderLoop(this);
-    this.sprites.push(sprite);
+    if (this._findSprite(name) >= 0) {
+      return false;
+    }
+    this.sprites.push({ sprite, name });
+    return true;
+  }
+
+  deleteSprite(name) {
+    const index = this._findSprite(name);
+    if (index == -1) {
+      return false;
+    } else {
+      this.sprites.splice(index, 1);
+      return true;
+    }
   }
 
   addGlobal(global) {
@@ -104,9 +122,9 @@ export class RenderLoop {
   }
 
   drawStep() {
-    this.sprites.forEach(sprite =>
-      this.renderer.updateDrawableProperties(sprite.render, sprite.getRendererProps())
-    );
+    this.sprites.forEach((sprite) => {
+      this.renderer.updateDrawableProperties(sprite.sprite.render, sprite.sprite.getRendererProps());
+    });
     this.renderer.draw();
   }
 
