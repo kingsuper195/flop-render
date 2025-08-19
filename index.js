@@ -7,7 +7,7 @@ const RENDER_STEP_TIME = 1000 / FPS;
 
 export class RenderLoop {
   sprites = [];
-  mouse = { x: 0, y: 0, click: false }
+  mouse = { x: 0, y: 0, click: false, trueX: 240, trueY: 180 }
   callbacks = [];
   zero = document.timeline.currentTime;
   step = 0;
@@ -18,8 +18,29 @@ export class RenderLoop {
     requestAnimationFrame(this.frame.bind(this));
     document.addEventListener("mousemove", (e) => {
       let mpos = getMousePos(e, canvas);
-      this.mouse.x = mpos.x-240;
-      this.mouse.y = -mpos.y+180;
+      this.mouse.trueX = mpos.x;
+      this.mouse.trueY = mpos.y;
+      if (Math.abs(mpos.x - 240) < 241) {
+        this.mouse.x = mpos.x - 240;
+      } else {
+        if (mpos.x - 240 > 241) {
+          this.mouse.x = 240;
+        }
+        else {
+          this.mouse.x = - 240
+        }
+      }
+      if (Math.abs(-mpos.y + 180) < 181) {
+        this.mouse.y = -mpos.y + 180;
+      } else {
+        if (-mpos.y + 180 > 181) {
+          this.mouse.y = 180;
+        }
+        else {
+          this.mouse.x = - 180
+        }
+      }
+
     });
     document.addEventListener("mousedown", (event) => {
       this.mouse.click = true;
@@ -129,16 +150,16 @@ export class RenderLoop {
   frame() {
     // Run callbacks and steps once per frame
     if ((document.timeline.currentTime - this.zero) / RENDER_STEP_TIME >= this.step) {
-      this.callbacks.forEach(callback => callback(this));
       this.drawStep();
       this.step++;
+      this.callbacks.forEach(callback => callback(this));
+
     }
     requestAnimationFrame(this.frame.bind(this));
   }
 
-  drawStep() {
+  async drawStep() {
     this.sprites.forEach((sprite) => {
-      console.log(this.mouse);
       this.renderer.updateDrawableProperties(sprite.sprite.render, sprite.sprite.getRendererProps());
     });
     this.renderer.draw();
