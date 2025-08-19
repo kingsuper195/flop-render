@@ -7,7 +7,8 @@ const RENDER_STEP_TIME = 1000 / FPS;
 
 export class RenderLoop {
   sprites = [];
-  mouse = { x: 0, y: 0, click: false, trueX: 240, trueY: 180 }
+  mouse = { x: 0, y: 0, click: false, trueX: 240, trueY: 180 };
+  key = null;
   callbacks = [];
   zero = document.timeline.currentTime;
   step = 0;
@@ -47,6 +48,12 @@ export class RenderLoop {
     });
     document.addEventListener("mouseup", (event) => {
       this.mouse.click = false;
+    });
+    document.addEventListener("keydown", (event) => {
+      this.key = event.key;
+    });
+    document.addEventListener("keyup", (event) => {
+      this.key = null;
     });
   }
 
@@ -151,6 +158,7 @@ export class RenderLoop {
     // Run callbacks and steps once per frame
     if ((document.timeline.currentTime - this.zero) / RENDER_STEP_TIME >= this.step) {
       this.drawStep();
+      console.log(this.key);
       this.step++;
       this.callbacks.forEach(callback => callback(this));
 
