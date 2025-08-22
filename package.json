@@ -1,9 +1,12 @@
 {
   "name": "flop-render",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {},
   "author": "kingsuper195",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@scratch/scratch-render": "^11.6.0"
+  }
 }
