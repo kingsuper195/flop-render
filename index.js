@@ -16,6 +16,7 @@ export class RenderLoop {
 
   constructor(canvas) {
     this.renderer = new ScratchRender(canvas);
+    this.renderer.setLayerGroupOrdering(['group']);
     requestAnimationFrame(this.frame.bind(this));
     document.addEventListener("mousemove", (e) => {
       let mpos = getMousePos(e, canvas);
@@ -129,6 +130,7 @@ export class RenderLoop {
 
   addSprite(sprite, name) {
     sprite.setRenderLoop(this);
+    sprite.render = this.renderer.createDrawable('group');
     if (this._findSprite(name) >= 0) {
       return false;
     }
@@ -158,7 +160,6 @@ export class RenderLoop {
     // Run callbacks and steps once per frame
     if ((document.timeline.currentTime - this.zero) / RENDER_STEP_TIME >= this.step) {
       this.drawStep();
-      console.log(this.key);
       this.step++;
       this.callbacks.forEach(callback => callback(this));
 
