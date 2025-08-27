@@ -16,7 +16,7 @@ export class RenderLoop {
 
   constructor(canvas) {
     this.renderer = new ScratchRender(canvas);
-    this.renderer.setLayerGroupOrdering(['group']);
+    this.renderer.setLayerGroupOrdering(['stage','sprites']);
     requestAnimationFrame(this.frame.bind(this));
     document.addEventListener("mousemove", (e) => {
       let mpos = getMousePos(e, canvas);
@@ -79,7 +79,7 @@ export class RenderLoop {
 
   setStage(x, wantedSkin) {
     return new Promise((resolve) => {
-      const stage = this.renderer.createDrawable('group');
+      const stage = this.renderer.createDrawable('stage');
       this.renderer.updateDrawableProperties(stage, {
         position: [0, 0],
         scale: [100, 100],
@@ -130,7 +130,7 @@ export class RenderLoop {
 
   addSprite(sprite, name) {
     sprite.setRenderLoop(this);
-    sprite.render = this.renderer.createDrawable('group');
+    sprite.render = this.renderer.createDrawable('sprites');
     if (this._findSprite(name) >= 0) {
       return false;
     }
@@ -143,6 +143,7 @@ export class RenderLoop {
     if (index == -1) {
       return false;
     } else {
+      this.renderer.destroyDrawable(this.sprites[index].sprite.render, 'sprites');
       this.sprites.splice(index, 1);
       return true;
     }
