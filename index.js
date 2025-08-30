@@ -16,7 +16,7 @@ export class RenderLoop {
 
   constructor(canvas) {
     this.renderer = new ScratchRender(canvas);
-    this.renderer.setLayerGroupOrdering(['stage','sprites']);
+    this.renderer.setLayerGroupOrdering(['stage', 'sprites']);
     requestAnimationFrame(this.frame.bind(this));
     document.addEventListener("mousemove", (e) => {
       let mpos = getMousePos(e, canvas);
@@ -75,6 +75,20 @@ export class RenderLoop {
 
 
     source.start();
+  }
+
+  async spriteTouchingPoint(sprite, x, y) {
+    return await this.renderer.drawableTouching(sprite.render, x, y);
+  }
+  async spriteTouchingSprites(sprites) {
+    return await this.renderer.isTouchingDrawables(sprites[0].render, sprites.slice(1).map((sprite) => sprite.render));
+  }
+
+  async spriteTouchingColour(sprite, colour) {
+    return await this.renderer.isTouchingColor(sprite.render, colour);
+  }
+  async spriteColourTouchingColour(sprite, spriteColour, outerColour) {
+    return await this.renderer.isTouchingColor(sprite.render, outerColour, spriteColour);
   }
 
   setStage(x, wantedSkin) {
