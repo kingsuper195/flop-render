@@ -90,6 +90,13 @@ export class RenderLoop {
   async spriteColourTouchingColour(sprite, spriteColour, outerColour) {
     return await this.renderer.isTouchingColor(sprite.render, outerColour, spriteColour);
   }
+  async setDrawableOrder(sprite, order, optIsRelative) {
+    if (optIsRelative !== undefined) {
+      return await this.renderer.setDrawableOrder(sprite.render, order, "sprites", optIsRelative);
+    } else {
+      return await this.renderer.setDrawableOrder(sprite.render, order, "sprites");
+    }
+  }
 
   setStage(x, wantedSkin) {
     return new Promise((resolve) => {
