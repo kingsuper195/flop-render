@@ -1,5 +1,5 @@
 import { getMousePos } from "./getMousePosition.js";
-import "../@scratch/scratch-render/dist/web/scratch-render.js";
+import ScratchRender from "@scratch/scratch-render";
 
 const FPS = 30;
 const RENDER_STEP_TIME = 1000 / FPS;

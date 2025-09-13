@@ -2,11 +2,19 @@
   "name": "flop-render",
   "version": "0.0.1",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "webpack":"webpack --config webpack.config.cjs"
+  },
   "author": "kingsuper195",
   "license": "MIT",
   "description": "",
+  "type": "module",
   "dependencies": {
-    "@scratch/scratch-render": "^11.6.0"
+    "@scratch/scratch-render": "^11.6.0",
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
   }
 }
