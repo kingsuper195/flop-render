@@ -145,26 +145,23 @@ export class RenderLoop {
     });
   }
 
-  _findSprite(name) {
-    return this.sprites.findIndex(e => e.name == name)
+  _findSprite(render) {
+    return this.sprites.findIndex(e => e.render == render)
   }
 
-  addSprite(sprite, name) {
+  addSprite(sprite) {
     sprite.setRenderLoop(this);
     sprite.render = this.renderer.createDrawable('sprites');
-    if (this._findSprite(name) >= 0) {
-      return false;
-    }
-    this.sprites.push({ sprite, name });
-    return true;
+    this.sprites.push(sprite);
+    return sprite.render;
   }
 
-  deleteSprite(name) {
-    const index = this._findSprite(name);
+  deleteSprite(sprite) {
+    const index = this._findSprite(sprite.render);
     if (index == -1) {
       return false;
     } else {
-      this.renderer.destroyDrawable(this.sprites[index].sprite.render, 'sprites');
+      this.renderer.destroyDrawable(sprite.render, 'sprites');
       this.sprites.splice(index, 1);
       return true;
     }
@@ -189,10 +186,12 @@ export class RenderLoop {
     requestAnimationFrame(this.frame.bind(this));
   }
 
-  async drawStep() {
+  async drawSprite() {
     this.sprites.forEach((sprite) => {
-      this.renderer.updateDrawableProperties(sprite.sprite.render, sprite.sprite.getRendererProps());
+      this.renderer.updateDrawableProperties(sprite.render, sprite.getRendererProps());
     });
+  }
+  async drawStep() {
     this.renderer.draw();
   }
 

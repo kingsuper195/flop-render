@@ -9,6 +9,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: './index.js',
     mode: "production",
+    watch: true,
     experiments: {
         outputModule: true,
     },
