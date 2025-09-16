@@ -186,10 +186,28 @@ export class RenderLoop {
     requestAnimationFrame(this.frame.bind(this));
   }
 
-  async drawSprite() {
-    this.sprites.forEach((sprite) => {
-      this.renderer.updateDrawableProperties(sprite.render, sprite.getRendererProps());
-    });
+  async drawSprite(sprite, prop) {
+    let srp = sprite.getRendererProps();
+    if (prop == "position") {
+      this.renderer.updateDrawablePosition(sprite.render, srp.position);
+    } else if (prop == "direction") {
+      this.renderer.updateDrawableDirection(sprite.render, srp.direction);
+    } else if (prop == "scale") {
+      this.renderer.updateDrawableScale(sprite.render, srp.scale);
+    } else if (prop == "visible") {
+      this.renderer.updateDrawableVisible(sprite.render, srp.visible);
+    } else if (prop == "effects") {
+      this.renderer.updateDrawableEffect(sprite.render, "color", srp.colour);
+      this.renderer.updateDrawableEffect(sprite.render, "whirl", srp.whirl);
+      this.renderer.updateDrawableEffect(sprite.render, "fisheye", srp.fisheye);
+      this.renderer.updateDrawableEffect(sprite.render, "pixelate", srp.pixelate);
+      this.renderer.updateDrawableEffect(sprite.render, "mosaic", srp.mosaic);
+      this.renderer.updateDrawableEffect(sprite.render, "brightness", srp.brightness);
+      this.renderer.updateDrawableEffect(sprite.render, "ghost", srp.ghost);
+    }
+    // this.sprites.forEach((sprite) => {
+    //   this.renderer.updateDrawableProperties(sprite.render, sprite.getRendererProps());
+    // });
   }
   async drawStep() {
     this.renderer.draw();
@@ -212,9 +230,7 @@ export class RenderLoop {
         image.addEventListener('load', () => {
           const bitmapSkinId = this.renderer.createBitmapSkin(image);
 
-          this.renderer.updateDrawableProperties(sprite.render, {
-            skinId: bitmapSkinId
-          });
+          this.renderer.updateDrawableSkinId(sprite.render, bitmapSkinId);
 
           resolve();
         });
@@ -228,9 +244,7 @@ export class RenderLoop {
         xhr.addEventListener('load', () => {
           const skinId = this.renderer.createSVGSkin(xhr.responseText);
 
-          this.renderer.updateDrawableProperties(sprite.render, {
-            skinId: skinId
-          });
+          this.renderer.updateDrawableSkinId(sprite.render, skinId);
 
           resolve();
         });
