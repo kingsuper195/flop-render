@@ -7,6 +7,7 @@ const RENDER_STEP_TIME = 1000 / FPS;
 
 export class RenderLoop {
   sprites = [];
+  screenRefresh = true;
   mouse = { x: 0, y: 0, click: false, trueX: 240, trueY: 180 };
   key = null;
   callbacks = [];
@@ -177,11 +178,13 @@ export class RenderLoop {
 
   frame() {
     // Run callbacks and steps once per frame
-    if ((document.timeline.currentTime - this.zero) / RENDER_STEP_TIME >= this.step) {
-      this.drawStep();
-      this.step++;
-      this.callbacks.forEach(callback => callback(this));
+    if (this.screenRefresh) {
+      if ((document.timeline.currentTime - this.zero) / RENDER_STEP_TIME >= this.step) {
+        this.renderer.draw();
+        this.step++;
+        this.callbacks.forEach(callback => callback(this));
 
+      }
     }
     requestAnimationFrame(this.frame.bind(this));
   }
@@ -208,9 +211,6 @@ export class RenderLoop {
     // this.sprites.forEach((sprite) => {
     //   this.renderer.updateDrawableProperties(sprite.render, sprite.getRendererProps());
     // });
-  }
-  async drawStep() {
-    this.renderer.draw();
   }
 
   async updateSkin(sprite) {
